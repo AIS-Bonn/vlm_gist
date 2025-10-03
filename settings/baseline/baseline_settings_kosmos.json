@@ -1,0 +1,14 @@
+{
+  "model_name": "kosmos2",
+  "model_id": 0,
+  "model_flavor": "patch14-224",
+  "model_prompt": "<grounding> Describe this image in detail:",
+  "model_num_beams": 3,
+  "model_max_new_tokens": 1024,
+  "model_max_batch_size": 6,
+  "segmentation_name": "sam2_realtime",
+  "segmentation_model_id": 0,
+  "segmentation_flavor": "large",
+  "segmentation_track": false,
+  "segmentation_use_bbox": true
+}

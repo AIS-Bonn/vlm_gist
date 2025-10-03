@@ -1,0 +1,121 @@
+{
+    "vlm_scene_description": {
+        "probe_api_connection": "False",
+        "api_endpoint": "AIS",
+        "model_name": "ais/internvl3-5-2b-reasoning-off",
+        "model_temperature": "0.8",
+        "model_top_p": "0.8",
+        "model_max_tokens": "10000",
+        "model_presence_penalty": "0.0",
+        "model_frequency_penalty": "0.0",
+        "model_reasoning_effort": "none",
+        "completion_parsers": "[\"json_decoder.py\"]",
+        "stream_completion": "False",
+        "normalize_text_completion": "False",
+        "correction_attempts": "0",
+        "timeout_chunk_first": "15.0",
+        "timeout_chunk_next": "15.0",
+        "timeout_completion": "300.0"
+    },
+    "vlm_structured_description": {
+        "probe_api_connection": "False",
+        "api_endpoint": "AIS",
+        "model_name": "ais/internvl3-5-2b-reasoning-off",
+        "model_temperature": "0.8",
+        "model_top_p": "0.8",
+        "model_max_tokens": "10000",
+        "model_presence_penalty": "0.0",
+        "model_frequency_penalty": "0.0",
+        "model_reasoning_effort": "none",
+        "completion_parsers": "[\"json_decoder.py\"]",
+        "stream_completion": "False",
+        "normalize_text_completion": "False",
+        "correction_attempts": "0",
+        "timeout_chunk_first": "15.0",
+        "timeout_chunk_next": "15.0",
+        "timeout_completion": "300.0"
+    },
+    "vlm_decoupled_attribution": {
+        "probe_api_connection": "False",
+        "api_endpoint": "AIS",
+        "model_name": "ais/internvl3-5-2b-reasoning-off",
+        "model_temperature": "0.8",
+        "model_top_p": "0.8",
+        "model_max_tokens": "10000",
+        "model_presence_penalty": "0.0",
+        "model_frequency_penalty": "0.0",
+        "model_reasoning_effort": "none",
+        "completion_parsers": "[\"json_decoder.py\"]",
+        "stream_completion": "False",
+        "normalize_text_completion": "False",
+        "correction_attempts": "0",
+        "timeout_chunk_first": "15.0",
+        "timeout_chunk_next": "15.0",
+        "timeout_completion": "300.0"
+    },
+    "system_prompt_scene_description": "You are a robot's visual perception system that identifies and analyzes objects in an image. Be concise and factual.",
+    "system_prompt_scene_description_role": "user",
+    "system_prompt_structured_description": "You are a robot's visual perception system that identifies and analyzes objects in an image. Be concise and factual.",
+    "system_prompt_structured_description_role": "user",
+    "system_prompt_decoupled_attribution": "You are a robot's visual perception system that identifies and analyzes objects in an image. Be concise and factual.",
+    "system_prompt_decoupled_attribution_role": "user",
+    "image_resolution_scene_description": "high",
+    "image_resolution_structured_description": "high",
+    "image_resolution_decoupled_attribution": "high",
+    "scene_prompt": null,
+    "task": null,
+    "dict_prompt": "Provide a list in JSON format that contains each object (including furniture, persons, and animals) visible in the image above. Explicitly include each object instance as an individual list element, and never group multiple instances that are clearly distinct from one another. Each list element must be a dictionary with the fields object_name and description. The object_name of all humans must be person. The description must be a single short sentence (max. 10 words, starting with 'a' or 'an'), that differs from the other descriptions and summarizes the most important information about the type, color, and appearance of the object, allowing for a visual identification of the object without knowing any of the descriptions generated for the other objects.",
+    "direct_task_relevancy_prompt": " In addition, examine for each object whether it is relevant for accomplishing the following task: '{task}'For each list element, add a boolean field task_relevant accordingly. Do not consider objects that are similar or loosely related to a task-relevant object to be task-relevant. If you are unsure, it is most helpful to consider it not task-relevant.",
+    "decoupled_task_relevancy_prompt": "Examine for each listed object whether it is relevant for accomplishing the following task: '{task}'Respond with a list encoded as JSON featuring the 'object_name' value of all task-relevant objects from the dictionary you provided above.",
+    "decoupled_task_relevancy": true,
+    "decoupled_task_relevancy_remove_image": true,
+    "levenshtein_threshold": 0,
+    "levenshtein_normalization": true,
+    "dict_items": [
+        {
+            "key": "object_name",
+            "type": "str",
+            "valid": null,
+            "invalid": [
+                "",
+                "none",
+                "not applicable",
+                "n/a"
+            ],
+            "requires": null,
+            "required": true
+        },
+        {
+            "key": "description",
+            "type": "str",
+            "valid": null,
+            "invalid": [
+                "",
+                "none",
+                "not applicable",
+                "n/a"
+            ],
+            "requires": null,
+            "required": true
+        }
+    ],
+    "dict_direct_task_relevancy_item": {
+        "key": "task_relevant",
+        "type": "bool",
+        "valid": null,
+        "invalid": null,
+        "requires": null,
+        "required": true
+    },
+    "dict_value_normalization": {
+        "remove_underscores": true,
+        "remove_punctuation": true,
+        "remove_common_specials": true,
+        "remove_whitespaces": false,
+        "lowercase": true
+    },
+    "use_json_mode": false,
+    "retry": 3,
+    "png_compression_level": 2,
+    "png_max_pixels": 2073600
+}

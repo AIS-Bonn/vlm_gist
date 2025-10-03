@@ -1,0 +1,17 @@
+{
+  "model_name": "florence2",
+  "model_id": 0,
+  "model_flavor": "large",
+  "model_prompt": {
+    "task_prompt": "<DENSE_REGION_CAPTION>",
+    "prompt_args": null
+  },
+  "model_num_beams": 3,
+  "model_max_new_tokens": 1024,
+  "model_max_batch_size": 6,
+  "segmentation_name": "sam2_realtime",
+  "segmentation_model_id": 0,
+  "segmentation_flavor": "large",
+  "segmentation_track": true,
+  "segmentation_use_bbox": true
+}

@@ -1,0 +1,13 @@
+{
+      "over_detect": 1.0,
+      "nms_iou_threshold": null,
+      "conf_threshold": 0.0,
+      "detector_name": "mmgroundingdino",
+      "detector_model_id": 0,
+      "detector_flavor": "large",
+      "segmentation_name": "sam2_realtime",
+      "segmentation_model_id": 0,
+      "segmentation_flavor": "large",
+      "segmentation_track": true,
+      "segmentation_use_bbox": true
+}

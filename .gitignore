@@ -1,0 +1,12 @@
+cache
+.directory
+*.pyc
+*-checkpoint.ipynb
+*-checkpoint.txt
+debug.ipynb
+.vscode/*
+data
+datasets
+.devcontainer/dataset_mount/*
+!.devcontainer/dataset_mount/.gitkeep
+docker/.env

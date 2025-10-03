@@ -1,0 +1,33 @@
+{
+    "vlm": {
+        "probe_api_connection": "False",
+        "api_endpoint": "OpenRouter",
+        "model_name": "google/gemini-2.5-flash",
+        "model_temperature": "1.0",
+        "model_top_p": "1.0",
+        "model_max_tokens": "50",
+        "model_presence_penalty": "0.0",
+        "model_frequency_penalty": "0.0",
+        "model_reasoning_effort": "none",
+        "completion_parsers": "[]",
+        "stream_completion": "True",
+        "normalize_text_completion": "True",
+        "correction_attempts": "0",
+        "timeout_chunk_first": "20.0",
+        "timeout_chunk_next": "20.0",
+        "timeout_completion": "30.0"
+    },
+    "image_resolution_full": "high",
+    "image_resolution_crop": "high",
+    "bbox_scale": 1.0,
+    "background_saturation": 1.0,
+    "background_brightness": 1.0,
+    "prepend_image": true,
+    "system_prompt": "You are a robot's visual perception system that identifies and analyzes objects in an image. Be concise and factual.",
+    "description_prompt": "Provide a JSON description of all object instances in the image above.",
+    "validation_prompt": "Is this cropped image taken from the full image above a tight bounding box around any one of the objects mentioned in the description? If yes, your answer must only contain the one corresponding object_name. Otherwise, respond with '{invalid}'.",
+    "image_res": "high",
+    "invalid": "n/a",
+    "indent": 4,
+    "levenshtein_threshold": 2
+}
