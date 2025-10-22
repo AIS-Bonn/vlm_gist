@@ -221,6 +221,9 @@ https://arxiv.org/abs/2503.16538
     author={Bastian P{\"a}tzold and Jan Nogga and Sven Behnke},
     title={Leveraging Vision-Language Models for Open-Vocabulary Instance Segmentation and Tracking},
     journal={IEEE Robotics and Automation Letters (RA-L)},
+    volume={10},
+    number={11},
+    pages={11578-11585},
     year={2025}
 }
 ```
