@@ -130,7 +130,7 @@ class FiftyOneDetect(Node):
         self.timer_state.cancel()
         errors, export_paths = {}, []
         for i, path in enumerate(self.dataset_paths):
-            self._logger.info(f"Handling dataset '{i + 1}' of '{len(self.dataset_paths)}': '{path}'")
+            self._logger.info(f"Handling experiment '{i + 1}' of '{len(self.dataset_paths)}': '{path}' / '{self.settings_paths[i]}'")
             try:
                 if self.settings_paths is not None:
                     success, message, settings = read_json(file_path=self.settings_paths[i], logger=self._logger)
@@ -200,13 +200,14 @@ class FiftyOneDetect(Node):
             except SelfShutdown as e:
                 self._logger.error(f"{e}")
             except Exception as e:
-                self._logger.error(f"{repr(e)}\n{traceback.format_exc()}")
+                errors[path] = f"{repr(e)}\n{traceback.format_exc()}"
+                self._logger.error(errors[path])
 
         if len(self.dataset_paths) > 1:
             self._logger.info("Summary:")
             if len(errors) > 0:
                 for path in errors:
-                    self._logger.error(f"Error while handling '{path}' ({i}): {errors[path]}")
+                    self._logger.error(f"Error while handling experiment '{i}' ('{path}' / '{self.settings_paths[i]}'): {errors[path]}")
             if len(export_paths) > 0:
                 self._logger.info(f"Successfully exported datasets: {" ".join([f"'{path}'" for path in export_paths])}")
                 self._logger.info(f"Evaluate all successful datasets: {escape['cyan']}ros2 run vlm_gist fiftyone_eval -- {" ".join([f"'{path}'" for path in export_paths])}{escape['end']}")

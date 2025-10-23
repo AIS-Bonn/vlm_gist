@@ -1,5 +1,4 @@
-cv_bridge==4.1.0
-numpy==2.3.2
-opencv_python_headless==4.10.0.84
-scipy==1.16.1
-fiftyone==1.7.2
+numpy                  # Tested with 2.3.2
+opencv_python_headless # Tested with 4.10.0.84
+scipy                  # Tested with 1.16.1
+fiftyone               # Tested with 1.7.2
