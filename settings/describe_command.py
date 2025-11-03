@@ -1,5 +1,7 @@
 import os
 
+# datasets = ["./../data/datasets/vlm_gist"]
+# datasets = ["./../data/datasets/coco_500"]
 datasets = ["./../data/datasets/vlm_gist", "./../data/datasets/coco_500"]
 
 settings = "./description/pending/"

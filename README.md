@@ -5,10 +5,10 @@ Official implementation of: [*Leveraging Vision-Language Models for Open-Vocabul
 
 ### Benchmark
 
-We provide [detailed results](./notebooks/evaluation/evaluation.ipynb) and [all experimental settings](./settings).
+We provide [detailed results](./notebooks/evaluation/evaluation.ipynb) and [all experimental settings](./settings) for a subset of COCO minival and the VLM-GIST dataset.
 
 <details>
-<summary>COCO minival (subset)</summary>
+<summary>Dataset: COCO minival (subset)</summary>
 
 ```bash
 Model                        |  F1   |  Rec. | Prec. |  mAP  || Ins. | Mat. |  Time  || Fail | Ret.
@@ -18,6 +18,7 @@ Gemini 2.5 Pro (preview)     | 0.537 | 0.487 | 0.599 | 0.350 || 11.1 | 0.51 |  1
 Gemini 2.5 Pro               | 0.537 | 0.487 | 0.598 | 0.337 || 11.4 | 0.50 |  14.7s ||  nan |  nan
 GLM 4.5V (think)             | 0.526 | 0.445 | 0.642 | 0.334 ||  8.2 | 0.60 |  14.9s ||  nan |  nan
 Grok 4                       | 0.524 | 0.531 | 0.518 | 0.340 || 12.1 | 0.59 |  58.2s ||  nan |  nan
+GPT-5 chat                   | 0.524 | 0.449 | 0.628 | 0.336 ||  9.6 | 0.52 |   4.5s || 0.00 | 0.00
 InternVL 3.5 38B (think)     | 0.523 | 0.464 | 0.599 | 0.336 ||  9.8 | 0.55 |  59.1s ||  nan |  nan
 Gemini 2.5 Flash (medium)    | 0.520 | 0.487 | 0.558 | 0.323 || 12.7 | 0.48 |   6.6s ||  nan |  nan
 Gemini 2.5 Flash Lite (high) | 0.520 | 0.449 | 0.616 | 0.316 ||  8.9 | 0.57 |   9.5s || 0.00 | 0.05
@@ -26,15 +27,18 @@ InternVL 3.5 20B A4B (think) | 0.518 | 0.457 | 0.597 | 0.312 ||  9.2 | 0.58 |  4
 Gemini 2.5 Flash (high)      | 0.515 | 0.493 | 0.540 | 0.327 || 13.0 | 0.49 |   7.6s ||  nan |  nan
 Qwen3-VL 235B A22B (think)   | 0.513 | 0.459 | 0.580 | 0.324 ||  8.5 | 0.66 |   5.0s || 0.00 | 0.14
 GLM 4.5V                     | 0.510 | 0.412 | 0.670 | 0.328 ||  7.4 | 0.60 |  15.9s || 0.03 | 0.19
+GPT-4o chat                  | 0.509 | 0.482 | 0.539 | 0.336 || 12.1 | 0.52 |   6.8s || 0.00 | 0.00
 Gemini 2.5 Flash             | 0.509 | 0.453 | 0.579 | 0.321 ||  9.5 | 0.58 |   2.9s ||  nan |  nan
 GPT-4.1                      | 0.508 | 0.472 | 0.550 | 0.330 || 10.5 | 0.57 |   7.5s ||  nan |  nan
 Gemini 2.5 Flash (preview)   | 0.507 | 0.444 | 0.590 | 0.323 ||  9.2 | 0.57 |   3.2s ||  nan |  nan
 GPT-5 mini                   | 0.505 | 0.501 | 0.509 | 0.327 || 13.7 | 0.50 |  27.9s ||  nan |  nan
 GPT-4.1 mini                 | 0.504 | 0.426 | 0.618 | 0.297 ||  7.8 | 0.62 |   4.3s ||  nan |  nan
+o4 mini (high)               | 0.504 | 0.457 | 0.562 | 0.310 || 10.3 | 0.55 |  21.9s || 0.00 | 0.13
 Grok 4 Fast (high)           | 0.504 | 0.485 | 0.525 | 0.313 || 12.7 | 0.52 |   9.1s || 0.01 | 0.51
 InternVL 3.5 4B (think)      | 0.501 | 0.432 | 0.597 | 0.292 ||  8.9 | 0.57 |  35.0s ||  nan |  nan
 GPT-5 mini (high)            | 0.501 | 0.476 | 0.529 | 0.297 || 13.9 | 0.46 |  82.4s || 0.02 | 0.10
 Qwen3-VL 235B A22B           | 0.500 | 0.456 | 0.554 | 0.329 ||  9.4 | 0.62 |   6.1s || 0.01 | 0.10
+o3 (high)                    | 0.499 | 0.496 | 0.503 | 0.324 || 13.5 | 0.52 |  83.3s || 0.01 | 0.06
 OVIS 2.5 9B                  | 0.499 | 0.399 | 0.667 | 0.316 ||  7.0 | 0.60 |   6.5s ||  nan |  nan
 InternVL 3.5 30B A3B         | 0.499 | 0.410 | 0.635 | 0.306 ||  7.1 | 0.64 |  35.1s ||  nan |  nan
 Qwen3-VL 30B A3B (think)     | 0.495 | 0.391 | 0.677 | 0.276 ||  5.8 | 0.70 |  25.4s || 0.01 | 0.09
@@ -60,6 +64,7 @@ Claude Haiku 4.5             | 0.459 | 0.379 | 0.582 | 0.256 ||  9.8 | 0.47 |   
 Gemini 2.5 Flash Lite        | 0.447 | 0.435 | 0.460 | 0.304 || 10.1 | 0.66 |   2.8s || 0.00 | 0.01
 Qwen3-VL 30B A3B             | 0.432 | 0.408 | 0.459 | 0.275 ||  9.6 | 0.67 |   4.4s || 0.03 | 0.50
 Gemma 4B                     | 0.430 | 0.323 | 0.641 | 0.255 ||  6.4 | 0.55 |   3.3s || 0.00 | 0.01
+Qwen3-VL 32B                 | 0.420 | 0.390 | 0.457 | 0.248 || 13.0 | 0.58 |  12.7s || 0.20 | 1.45
 GPT-4.1 nano                 | 0.415 | 0.341 | 0.530 | 0.232 ||  6.5 | 0.69 |   3.5s ||  nan |  nan
 Qwen3-VL 8B                  | 0.366 | 0.394 | 0.343 | 0.279 ||  9.9 | 0.82 |   6.3s || 0.01 | 0.05
 Qwen3-VL 8B (think)          | 0.333 | 0.224 | 0.646 | 0.180 ||  7.0 | 0.61 |  72.0s || 0.43 | 1.64
@@ -67,7 +72,7 @@ Qwen3-VL 8B (think)          | 0.333 | 0.224 | 0.646 | 0.180 ||  7.0 | 0.61 |  7
 
 </details>
 <details>
-<summary>Custom Dataset</summary>
+<summary>Dataset: VLM-GIST</summary>
 
 ```bash
 Model                        |  F1   |  Rec. | Prec. |  mAP  || Ins. | Mat. |  Time  || Fail | Ret.
@@ -76,13 +81,17 @@ Gemini 2.5 Pro               | 0.464 | 0.417 | 0.523 | 0.363 || 14.7 | 1.00 |  1
 Gemini 2.5 Pro (high)        | 0.460 | 0.415 | 0.515 | 0.366 || 14.8 | 1.00 |  17.7s ||  nan |  nan
 Gemini 2.5 Pro (preview)     | 0.451 | 0.402 | 0.515 | 0.357 || 14.3 | 1.00 |  14.9s ||  nan |  nan
 Gemini 2.5 Flash (low)       | 0.435 | 0.395 | 0.485 | 0.344 || 15.0 | 1.00 |   7.1s ||  nan |  nan
+o4 mini (high)               | 0.432 | 0.381 | 0.498 | 0.337 || 14.1 | 1.00 |  24.6s || 0.00 | 0.02
 Grok 4                       | 0.428 | 0.385 | 0.482 | 0.340 || 14.7 | 1.00 |  34.7s ||  nan |  nan
 GPT-5 mini (high)            | 0.422 | 0.401 | 0.445 | 0.342 || 16.6 | 1.00 |  82.7s ||  nan |  nan
 GPT-5                        | 0.418 | 0.413 | 0.424 | 0.352 || 17.9 | 1.00 |  54.2s ||  nan |  nan
 OVIS 2.5 9B (think)          | 0.415 | 0.318 | 0.596 | 0.281 ||  9.8 | 1.00 |  32.0s ||  nan |  nan
 Gemini 2.5 Flash (high)      | 0.415 | 0.379 | 0.458 | 0.324 || 15.3 | 1.00 |   7.4s ||  nan |  nan
 GPT-5 mini                   | 0.414 | 0.388 | 0.444 | 0.338 || 16.1 | 1.00 |  32.7s ||  nan |  nan
+o3 (high)                    | 0.413 | 0.393 | 0.435 | 0.338 || 16.6 | 1.00 |  78.9s || 0.00 | 0.03
 Gemini 2.5 Flash Lite (high) | 0.412 | 0.340 | 0.522 | 0.291 || 12.0 | 1.00 |  11.9s || 0.00 | 0.02
+GPT-5 chat                   | 0.412 | 0.343 | 0.516 | 0.302 || 12.2 | 1.00 |   6.0s || 0.00 | 0.00
+GPT-4o chat                  | 0.411 | 0.374 | 0.456 | 0.318 || 15.1 | 1.00 |   8.5s || 0.00 | 0.00
 GPT-4.1 mini                 | 0.410 | 0.319 | 0.571 | 0.279 || 10.3 | 1.00 |   6.0s ||  nan |  nan
 GPT-4.1                      | 0.407 | 0.356 | 0.476 | 0.308 || 13.8 | 1.00 |   8.7s ||  nan |  nan
 Grok 4 Fast (high)           | 0.407 | 0.377 | 0.443 | 0.323 || 15.7 | 1.00 |   9.0s || 0.00 | 0.38
@@ -100,6 +109,7 @@ GPT-5 nano (high)            | 0.383 | 0.319 | 0.478 | 0.280 || 12.3 | 1.00 |  5
 InternVL 3.5 30B A3B (think) | 0.378 | 0.302 | 0.506 | 0.259 || 11.0 | 1.00 |  38.5s ||  nan |  nan
 GPT-5 nano                   | 0.373 | 0.306 | 0.479 | 0.267 || 11.8 | 1.00 |  28.9s ||  nan |  nan
 Qwen3-VL 8B                  | 0.373 | 0.284 | 0.544 | 0.249 ||  9.7 | 1.00 |   4.0s || 0.02 | 0.05
+Qwen3-VL 32B                 | 0.372 | 0.301 | 0.485 | 0.259 || 13.8 | 1.00 |  14.4s || 0.17 | 0.86
 GLM 4.5V                     | 0.368 | 0.279 | 0.538 | 0.243 ||  9.9 | 1.00 |  16.0s || 0.03 | 0.22
 OVIS 2.5 9B                  | 0.365 | 0.267 | 0.573 | 0.239 ||  8.6 | 1.00 |   8.0s ||  nan |  nan
 InternVL 3.5 4B (think)      | 0.363 | 0.284 | 0.503 | 0.246 || 10.4 | 1.00 |  36.1s ||  nan |  nan
@@ -128,7 +138,7 @@ Gemma 4B                     | 0.282 | 0.206 | 0.448 | 0.179 ||  8.5 | 1.00 |   
 
 
 <details open>
-<summary>Weighted Datasets</summary>
+<summary>Weighted</summary>
 
 ```bash
 Model                        |  F1   |  Rec. | Prec. |  mAP  || Ins. | Mat. |  Time  || Fail | Ret.
@@ -138,16 +148,20 @@ Gemini 2.5 Pro               | 0.500 | 0.452 | 0.560 | 0.350 || 13.0 | 0.75 |  1
 Gemini 2.5 Pro (preview)     | 0.494 | 0.444 | 0.557 | 0.353 || 12.7 | 0.76 |  14.1s ||  nan |  nan
 Gemini 2.5 Flash (low)       | 0.477 | 0.437 | 0.524 | 0.335 || 13.5 | 0.75 |   6.4s ||  nan |  nan
 Grok 4                       | 0.476 | 0.458 | 0.500 | 0.340 || 13.4 | 0.80 |  46.4s ||  nan |  nan
+o4 mini (high)               | 0.468 | 0.419 | 0.530 | 0.323 || 12.2 | 0.78 |  23.3s || 0.00 | 0.07
+GPT-5 chat                   | 0.468 | 0.396 | 0.572 | 0.319 || 10.9 | 0.76 |   5.2s || 0.00 | 0.00
 Gemini 2.5 Flash Lite (high) | 0.466 | 0.395 | 0.569 | 0.303 || 10.5 | 0.79 |  10.7s || 0.00 | 0.03
 Gemini 2.5 Flash (high)      | 0.465 | 0.436 | 0.499 | 0.325 || 14.1 | 0.75 |   7.5s ||  nan |  nan
 InternVL 3.5 38B (think)     | 0.464 | 0.398 | 0.560 | 0.315 || 10.8 | 0.78 |  58.7s ||  nan |  nan
 GLM 4.5V (think)             | 0.463 | 0.379 | 0.599 | 0.305 ||  9.3 | 0.80 |  14.9s ||  nan |  nan
 GPT-5 mini (high)            | 0.461 | 0.438 | 0.487 | 0.319 || 15.2 | 0.73 |  82.6s ||  nan |  nan
+GPT-4o chat                  | 0.460 | 0.428 | 0.498 | 0.327 || 13.6 | 0.76 |   7.7s || 0.00 | 0.00
 Gemini 2.5 Flash (medium)    | 0.460 | 0.426 | 0.499 | 0.317 || 14.0 | 0.74 |   6.9s ||  nan |  nan
 GPT-5 mini                   | 0.460 | 0.445 | 0.476 | 0.332 || 14.9 | 0.75 |  30.3s ||  nan |  nan
 GPT-4.1                      | 0.458 | 0.414 | 0.513 | 0.319 || 12.1 | 0.79 |   8.1s ||  nan |  nan
 Gemini 2.5 Flash             | 0.457 | 0.399 | 0.537 | 0.313 || 11.1 | 0.79 |   3.2s ||  nan |  nan
 GPT-4.1 mini                 | 0.457 | 0.373 | 0.595 | 0.288 ||  9.0 | 0.81 |   5.2s ||  nan |  nan
+o3 (high)                    | 0.456 | 0.445 | 0.469 | 0.331 || 15.0 | 0.76 |  81.1s || 0.00 | 0.04
 Grok 4 Fast (high)           | 0.456 | 0.431 | 0.484 | 0.318 || 14.2 | 0.76 |   9.0s || 0.01 | 0.44
 Gemini 2.5 Flash (preview)   | 0.454 | 0.393 | 0.538 | 0.310 || 11.1 | 0.79 |   3.6s ||  nan |  nan
 GPT-5                        | 0.452 | 0.458 | 0.448 | 0.331 || 16.8 | 0.74 |  50.9s ||  nan |  nan
@@ -172,6 +186,7 @@ InternVL 3.5 2B (think)      | 0.403 | 0.323 | 0.540 | 0.257 ||  8.8 | 0.79 |  3
 Gemma 27B                    | 0.402 | 0.343 | 0.489 | 0.256 || 11.1 | 0.75 |  10.5s || 0.00 | 0.00
 Claude Sonnet 4              | 0.397 | 0.311 | 0.548 | 0.253 ||  9.1 | 0.75 |   5.9s ||  nan |  nan
 Gemini 2.5 Flash Lite        | 0.396 | 0.359 | 0.453 | 0.272 || 10.9 | 0.83 |   3.0s || 0.00 | 0.01
+Qwen3-VL 32B                 | 0.396 | 0.345 | 0.471 | 0.253 || 13.4 | 0.79 |  13.5s || 0.19 | 1.15
 Gemma 12B                    | 0.388 | 0.312 | 0.517 | 0.248 ||  9.7 | 0.75 |  13.3s || 0.02 | 0.47
 Qwen3-VL 30B A3B             | 0.381 | 0.326 | 0.485 | 0.245 ||  9.6 | 0.83 |   7.8s || 0.05 | 0.55
 InternVL 3.5 2B              | 0.380 | 0.297 | 0.547 | 0.234 ||  7.2 | 0.84 | 121.1s ||  nan |  nan
@@ -266,7 +281,7 @@ https://arxiv.org/abs/2503.16538
 
 `vlm_gist` (code, scripts, etc.) is licensed under BSD‑3.
 
-The custom dataset (see [dataset](./data/datasets/vlm_gist)) is licensed under [CC BY‑NC‑SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (see [license](./data/datasets/vlm_gist/LICENSE)), where 42 images ([00013.jpg](./data/datasets/vlm_gist/data/00013.jpg) to [00054.jpg](./data/datasets/vlm_gist/data/00054.jpg)) are taken from the [AgiBot World](https://agibot-world.com/) dataset.
+The VLM-GIST dataset (see [dataset](./data/datasets/vlm_gist)) is licensed under [CC BY‑NC‑SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (see [license](./data/datasets/vlm_gist/LICENSE)), where 42 images ([00013.jpg](./data/datasets/vlm_gist/data/00013.jpg) to [00054.jpg](./data/datasets/vlm_gist/data/00054.jpg)) are taken from the [AgiBot World](https://agibot-world.com/) dataset.
 
 ### Contact
 
