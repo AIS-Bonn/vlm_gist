@@ -68,7 +68,7 @@ class FiftyOneShow(Node):
         self.timer_state.cancel()
         try:
             fiftyone = import_fiftyone(logger=self._logger)
-            dataset = load_dataset(fiftyone=fiftyone, dataset_path=self.dataset_path, logger=self._logger)
+            dataset = load_dataset(fiftyone=fiftyone, dataset_path=self.dataset_path, load_masks=True, logger=self._logger)
             show_dataset(fiftyone=fiftyone, dataset=dataset, logger=self._logger)
         except SelfShutdown as e:
             self._logger.error(f"{e}")
