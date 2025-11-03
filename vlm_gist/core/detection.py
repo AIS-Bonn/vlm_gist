@@ -257,15 +257,15 @@ class Detection:
                 self._metadata_queue.put_nowait((settings[i]['data_path'], settings[i]['metadata_file'], image_paths_metadata[i], 'duration_inference_detection', metadata[i]['duration_inference_detection']))
 
             # segmentation
-            segmentations = None
+            segmentations_update, segmentations_track = None, None
             if len(detections) > 0 and settings[i]['segmentation_name'] is not None:
                 metadata[i]['stamp_inference_segmentation_start'] = datetime.datetime.now().isoformat()
                 self._metadata_queue.put_nowait((settings[i]['data_path'], settings[i]['metadata_file'], image_paths_metadata[i], 'stamp_inference_segmentation_start', metadata[i]['stamp_inference_segmentation_start']))
 
-                sam_prompts = [{'object_id': j, 'bbox': det['box_xyxy']} for j, det in enumerate(detections)]
+                sam_prompts = [{'object_id': j, 'bbox': det['box_xyxy']} for j, det in enumerate(detections)] # object_id becomes track_id
 
                 if settings[i]['segmentation_name'] == "sam2_realtime":
-                    success, message, segmentations = self._node.api_director.sam2_realtime_update(
+                    success, message, segmentations_update = self._node.api_director.sam2_realtime_update(
                         image=image_paths[i],
                         prompts=sam_prompts,
                         model_id=settings[i]['segmentation_model_id'],
@@ -273,7 +273,14 @@ class Detection:
                         retry=settings[i]['retry']
                     )
                     if success:
-                        self._logger.info(f"Segmented '{len(segmentations)}' detection{'s' if len(segmentations) != 1 else ''}")
+                        if len(segmentations_update) < len(detections):
+                            self._logger.warn(f"Segmented '{len(segmentations_update)}' detection{'s' if len(segmentations_update) != 1 else ''}")
+                        else:
+                            self._logger.info(f"Segmented '{len(segmentations_update)}' detection{'s' if len(segmentations_update) != 1 else ''}")
+                        segmentations_update_id_to_index = {}
+                        for j in range(len(segmentations_update)):
+                            assert segmentations_update[j]['track_id'] not in segmentations_update_id_to_index, f"Expected each track_id to be unique: {[mask['track_id'] for mask in segmentations_update]}"
+                            segmentations_update_id_to_index[segmentations_update[j]['track_id']] = j
                     else:
                         metadata[i]['stamp_error'] = datetime.datetime.now().isoformat()
                         metadata[i]['report_error'] = message
@@ -282,19 +289,27 @@ class Detection:
                         continue
 
                     if settings[i]['segmentation_track']:
-                        success, message, segmentations = self._node.api_director.sam2_realtime_track(
+                        success, message, segmentations_track = self._node.api_director.sam2_realtime_track(
                             image=image_paths[i],
                             model_id=settings[i]['segmentation_model_id'],
                             retry=settings[i]['retry']
                         )
                         if success:
-                            self._logger.info(f"Tracked '{len(segmentations)}' detection{'s' if len(segmentations) != 1 else ''}")
+                            if len(segmentations_track) < len(segmentations_update):
+                                self._logger.warn(f"Tracked '{len(segmentations_track)}' track{'s' if len(segmentations_track) != 1 else ''}")
+                            else:
+                                self._logger.info(f"Tracked '{len(segmentations_track)}' track{'s' if len(segmentations_track) != 1 else ''}")
+                            segmentations_track_id_to_index = {}
+                            for j in range(len(segmentations_track)):
+                                assert segmentations_track[j]['track_id'] not in segmentations_track_id_to_index, f"Expected each track_id to be unique: {[mask['track_id'] for mask in segmentations_track]}"
+                                segmentations_track_id_to_index[segmentations_track[j]['track_id']] = j
                         else:
                             metadata[i]['stamp_error'] = datetime.datetime.now().isoformat()
                             metadata[i]['report_error'] = message
                             self._metadata_queue.put_nowait((settings[i]['data_path'], settings[i]['metadata_file'], image_paths_metadata[i], 'stamp_error', metadata[i]['stamp_error']))
                             self._metadata_queue.put_nowait((settings[i]['data_path'], settings[i]['metadata_file'], image_paths_metadata[i], 'report_error', message))
                             continue
+
                 else:
                     raise NotImplementedError(f"Segmentation model '{settings[i]['segmentation_name']}' is not implemented.")
 
@@ -320,18 +335,41 @@ class Detection:
                                 retry=settings[i]['retry']
                             )
 
+            # associate
+
             # construct outputs
 
+            at_least_one_mask = False
             labels_image, bboxes_detection_image, confidences_image, bboxes_mask_image, masks_image_list, masks_image_b64, track_ids_image = [], [], [], [], [], [], []
             for j, detection in enumerate(detections):
                 labels_image.append(detection['prompt'])
                 bboxes_detection_image.append(detection['box_xyxy'])
                 confidences_image.append(detection['confidence'])
-                if segmentations is not None:
-                    bboxes_mask_image.append(segmentations[j]['box_xyxy'])
-                    masks_image_list.append(decode_mask(segmentations[j]['mask']).tolist())
-                    masks_image_b64.append(segmentations[j]['mask'])
-                    track_ids_image.append(segmentations[j]['track_id'])
+
+                assigned_mask = False
+                if segmentations_track is not None:
+                    if j in segmentations_track_id_to_index:
+                        bboxes_mask_image.append(segmentations_track[segmentations_track_id_to_index[j]]['box_xyxy'])
+                        masks_image_list.append(decode_mask(segmentations_track[segmentations_track_id_to_index[j]]['mask']).tolist())
+                        masks_image_b64.append(segmentations_track[segmentations_track_id_to_index[j]]['mask'])
+                        track_ids_image.append(segmentations_track[segmentations_track_id_to_index[j]]['track_id'])
+                        at_least_one_mask = True
+                        assigned_mask = True
+
+                if not assigned_mask and segmentations_track is not None:
+                    if j in segmentations_track_id_to_index:
+                        bboxes_mask_image.append(segmentations_track[segmentations_track_id_to_index[j]]['box_xyxy'])
+                        masks_image_list.append(decode_mask(segmentations_track[segmentations_track_id_to_index[j]]['mask']).tolist())
+                        masks_image_b64.append(segmentations_track[segmentations_track_id_to_index[j]]['mask'])
+                        track_ids_image.append(segmentations_track[segmentations_track_id_to_index[j]]['track_id'])
+                        at_least_one_mask = True
+                        assigned_mask = True
+
+                if not assigned_mask:
+                    bboxes_mask_image.append(None)
+                    masks_image_list.append(None)
+                    masks_image_b64.append(None)
+                    track_ids_image.append(None)
 
             is_over_detection_image = np.ones(len(detections), dtype=bool)
             if isinstance(settings[i]['over_detect'], float) and settings[i]['over_detect'] > 0.0:
@@ -351,19 +389,25 @@ class Detection:
             labels.append(labels_image)
             bboxes_detection.append(bboxes_detection_image)
             confidences.append(confidences_image)
-            if segmentations is None:
-                bboxes_mask.append(None)
-                masks_list.append(None)
-                masks_b64.append(None)
-                track_ids.append(None)
-            else:
+            if at_least_one_mask:
                 bboxes_mask.append(bboxes_mask_image)
                 masks_list.append(masks_image_list)
                 masks_b64.append(masks_image_b64)
                 track_ids.append(track_ids_image)
+            else:
+                bboxes_mask.append(None)
+                masks_list.append(None)
+                masks_b64.append(None)
+                track_ids.append(None)
 
-            if segmentations is not None and settings[i]['segmentation_use_bbox']:
-                bboxes.append(bboxes_mask_image)
+            if settings[i]['segmentation_use_bbox'] and at_least_one_mask:
+                bboxes_preferred_mask_image = []
+                for j in range(len(detections)):
+                    if bboxes_mask_image[j] is None:
+                        bboxes_preferred_mask_image.append(bboxes_detection_image[j])
+                    else:
+                        bboxes_preferred_mask_image.append(bboxes_mask_image[j])
+                bboxes.append(bboxes_preferred_mask_image)
             else:
                 bboxes.append(bboxes_detection_image)
 
@@ -416,13 +460,14 @@ class Detection:
                     metadata[i]['masks_cropped'] = True
                 else:
                     metadata[i]['masks_cropped'] = False
-                    image_shape = (images[i].shape[0], images[i].shape[1])
-                    for j, (bbox, mask) in enumerate(zip(bboxes_mask[-1], masks_list[-1])):
-                        full_mask = np.zeros(image_shape, dtype=bool)
-                        x0, y0, x1, y1 = bbox
-                        full_mask[y0:y1, x0:x1] = mask
-                        masks_list[-1][j] = full_mask.tolist()
-                        masks_b64[-1][j] = encode_mask(full_mask)
+                    if masks_list[-1] is not None:
+                        image_shape = (images[i].shape[0], images[i].shape[1])
+                        for j, (bbox, mask) in enumerate(zip(bboxes_mask[-1], masks_list[-1])):
+                            full_mask = np.zeros(image_shape, dtype=bool)
+                            x0, y0, x1, y1 = bbox
+                            full_mask[y0:y1, x0:x1] = mask
+                            masks_list[-1][j] = full_mask.tolist()
+                            masks_b64[-1][j] = encode_mask(full_mask)
                 self._metadata_queue.put_nowait((settings[i]['data_path'], settings[i]['metadata_file'], image_paths_metadata[i], 'masks_cropped', metadata[i]['masks_cropped']))
 
                 metadata[i]['masks'] = masks_b64[-1]
