@@ -1,0 +1,21 @@
+services:
+  nimbro-dev:
+    container_name: nimbro_dev
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    user: root
+    network_mode: host
+    working_dir: /colcon_ws/src/vlm_gist
+    volumes:
+      - ..:/colcon_ws/src/vlm_gist:rw
+    env_file:
+      - ../docker/.env
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - VLLM_API_KEY=${VLLM_API_KEY}
+      - AIS_API_KEY=${AIS_API_KEY}
+      - NIMBRO_VISION_API_KEY=${NIMBRO_VISION_API_KEY}
+    command: ["/bin/bash", "-c", "echo 'Development container ready.' && bash"]

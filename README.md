@@ -241,6 +241,10 @@ several [nodes](./vlm_gist/fiftyone) to interact (download,  describe, detect, v
 
 See the provided Jupyter Notebooks for [reproducing results](./notebooks/evaluation/command_builders.ipynb) or [using the node extensions](./notebooks/method).
 
+### Docker
+
+Alternatively, you can use the provided [devcontainer](./.devcontainer) or [Dockerfile](./docker/Dockerfile).
+
 ### Citation
 
 If you utilize this package in your research, please cite:
