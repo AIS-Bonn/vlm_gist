@@ -127,7 +127,10 @@ class FiftyOneEval(Node):
         for key in ['descriptions', 'detections', 'validations', 'label_matches']:
             metadata_path = os.path.join(path, f"{key}.json")
             if os.path.isfile(metadata_path):
-                success, _, metadata[key] = read_json(file_path=metadata_path, logger=self._logger)
+                success, message, metadata[key] = read_json(file_path=metadata_path, logger=self._logger)
+                if not success:
+                    metadata.pop(key)
+                    # raise SelfShutdown
             elif key != 'validations':
                 self._logger.warn(f"Evaluation will be incomplete because the metadata file '{metadata_path}' does not exist")
             else:
@@ -170,6 +173,7 @@ class FiftyOneEval(Node):
             else:
                 if 'images' not in results:
                     results['images'] = {}
+                # results['images'][f'{key}_size'] = len(values)
                 results['images'][f'{key}_NaN'] = np.count_nonzero(np.isnan(values)) / (max(len(values), 1))
                 results['images'][f'{key}_median'] = float(np.nanmedian(values))
                 results['images'][f'{key}_mean'] = float(np.nanmean(values))

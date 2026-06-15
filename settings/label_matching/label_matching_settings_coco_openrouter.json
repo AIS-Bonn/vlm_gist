@@ -10,8 +10,8 @@
     "definition_prompt_label": "Please define and describe the characteristic properties of the following term in 5 sentences: {label}",
     "llm": {
         "probe_api_connection": "True",
-        "api_endpoint": "OpenAI",
-        "model_name": "gpt-4o-2024-11-20",
+        "api_endpoint": "OpenRouter",
+        "model_name": "openai/gpt-4o-2024-11-20",
         "model_temperature": "1.0",
         "model_top_p": "1.0",
         "model_max_tokens": "2000",

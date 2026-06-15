@@ -241,7 +241,7 @@ class FiftyOneLabelMatch(Node):
                 for path in errors:
                     self._logger.error(f"Error while handling experiment '{i}' ('{path}' / '{self.settings_paths[i]}'): {errors[path]}")
             if len(export_paths) > 0:
-                self._logger.info(f"Successfully exported datasets: {" ".join([f"'{path}'" for path in export_paths])}")
+                self._logger.info(f"Successfully exported '{len(export_paths)}' datasets: {" ".join([f"'{path}'" for path in export_paths])}")
                 self._logger.info(f"Evaluate all successful datasets: {escape['cyan']}ros2 run vlm_gist fiftyone_eval -- {" ".join([f"'{path}'" for path in export_paths])}{escape['end']}")
 
         self._logger.info("Node stopped")

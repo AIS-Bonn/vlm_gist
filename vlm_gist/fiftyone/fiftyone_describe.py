@@ -152,7 +152,14 @@ class FiftyOneDescribe(Node):
                 fiftyone = import_fiftyone(logger=self._logger)
                 dataset = load_dataset(fiftyone=fiftyone, dataset_path=path, logger=self._logger)
                 dataset = self.describe_dataset(dataset=dataset)
-                export_path = get_export_path(export_path=self.parameters.export_path, dataset_path=path)
+                dataset_name = os.path.basename(os.path.normpath(path)).lower()
+                base_export_path = self.parameters.export_path
+                identifier = os.path.splitext(os.path.basename(self.settings_paths[i]))[0].split("description_settings_", 1)[1] if self.settings_paths is not None else ""
+                if "coco" in dataset_name:
+                    base_export_path = os.path.join(os.path.dirname(base_export_path), "new", "coco", identifier, os.path.basename(base_export_path))
+                elif "gist" in dataset_name:
+                    base_export_path = os.path.join(os.path.dirname(base_export_path), "new", "custom", identifier, os.path.basename(base_export_path))
+                export_path = get_export_path(export_path=base_export_path, dataset_path=path)
                 save_dataset(fiftyone=fiftyone, dataset=dataset, export_dir=export_path, logger=self._logger)
 
                 # move description file
@@ -187,7 +194,7 @@ class FiftyOneDescribe(Node):
                 for path in errors:
                     self._logger.error(f"Error while handling experiment '{i}' ('{path}' / '{self.settings_paths[i]}'): {errors[path]}")
             if len(export_paths) > 0:
-                self._logger.info(f"Successfully exported datasets: {" ".join([f"'{path}'" for path in export_paths])}")
+                self._logger.info(f"Successfully exported '{len(export_paths)}' datasets: {" ".join([f"'{path}'" for path in export_paths])}")
                 self._logger.info(f"Evaluate all successful datasets: {escape['cyan']}ros2 run vlm_gist fiftyone_eval -- {" ".join([f"'{path}'" for path in export_paths])}{escape['end']}")
 
         self._logger.info("Node stopped")

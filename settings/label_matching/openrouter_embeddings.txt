@@ -1,0 +1,3 @@
+ros2 param set /nimbro_api/embeddings probe_api_connection False
+ros2 param set /nimbro_api/embeddings api_endpoint OpenRouter
+ros2 param set /nimbro_api/embeddings model_name openai/text-embedding-3-large

@@ -321,7 +321,7 @@ class Detection:
                 # secondary tracker
                 if settings[i]['segmentation_model_id_secondary'] is not None:
                     if settings[i]['segmentation_name'] == "sam2_realtime":
-                        self._node.api_director.sam2_realtime_2_update(
+                        self._node.api_director.sam2_realtime_update(
                             image=image_paths[i],
                             prompts=sam_prompts,
                             model_id=settings[i]['segmentation_model_id_secondary'],
@@ -329,15 +329,13 @@ class Detection:
                             retry=settings[i]['retry']
                         )
                         if settings[i]['segmentation_track']:
-                            self._node.api_director.sam2_realtime_2_track(
+                            self._node.api_director.sam2_realtime_track(
                                 image=image_paths[i],
                                 model_id=settings[i]['segmentation_model_id_secondary'],
                                 retry=settings[i]['retry']
                             )
 
-            # associate
-
-            # construct outputs
+            # associate masks
 
             at_least_one_mask = False
             labels_image, bboxes_detection_image, confidences_image, bboxes_mask_image, masks_image_list, masks_image_b64, track_ids_image = [], [], [], [], [], [], []
@@ -356,12 +354,12 @@ class Detection:
                         at_least_one_mask = True
                         assigned_mask = True
 
-                if not assigned_mask and segmentations_track is not None:
-                    if j in segmentations_track_id_to_index:
-                        bboxes_mask_image.append(segmentations_track[segmentations_track_id_to_index[j]]['box_xyxy'])
-                        masks_image_list.append(decode_mask(segmentations_track[segmentations_track_id_to_index[j]]['mask']).tolist())
-                        masks_image_b64.append(segmentations_track[segmentations_track_id_to_index[j]]['mask'])
-                        track_ids_image.append(segmentations_track[segmentations_track_id_to_index[j]]['track_id'])
+                if not assigned_mask and segmentations_update is not None:
+                    if j in segmentations_update_id_to_index:
+                        bboxes_mask_image.append(segmentations_update[segmentations_update_id_to_index[j]]['box_xyxy'])
+                        masks_image_list.append(decode_mask(segmentations_update[segmentations_update_id_to_index[j]]['mask']).tolist())
+                        masks_image_b64.append(segmentations_update[segmentations_update_id_to_index[j]]['mask'])
+                        track_ids_image.append(segmentations_update[segmentations_update_id_to_index[j]]['track_id'])
                         at_least_one_mask = True
                         assigned_mask = True
 
@@ -370,6 +368,8 @@ class Detection:
                     masks_image_list.append(None)
                     masks_image_b64.append(None)
                     track_ids_image.append(None)
+
+            # construct outputs
 
             is_over_detection_image = np.ones(len(detections), dtype=bool)
             if isinstance(settings[i]['over_detect'], float) and settings[i]['over_detect'] > 0.0:

@@ -1099,9 +1099,9 @@ class StructuredDescription:
             else:
                 # must have at least one key
                 if len(response.keys()) != 1:
-                    message = f"Response is a dictionary with '{len(response.keys())}' keys: {list(response.keys())}"
+                    message = f"Response is a dictionary with '{len(response.keys())}' keys."
                     if len(response.keys()) > 0:
-                        message = f"{message}: {list(response.keys())}"
+                        message = f"{message[:-1]}: {list(response.keys())}"
                     else:
                         raise ValidationError(message)
                     self._logger.warn(message)
@@ -1159,6 +1159,10 @@ class StructuredDescription:
                                 target_type = int
                             elif item['type'] == 'float':
                                 target_type = float
+                            elif item['type'] == 'list':
+                                target_type = list
+                            else:
+                                raise NotImplementedError(f"Unknown attribute type '{item['type']}'.")
 
                             if target_type == str and not isinstance(obj[matched_key], target_type):
                                 message = f"Object {j + 1}/{len(objects_raw)} key '{item['key']}' is of type '{type(obj[matched_key]).__name__}' instead of 'str', casting it to 'str'."
